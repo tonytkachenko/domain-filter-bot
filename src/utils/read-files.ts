@@ -22,6 +22,7 @@ export async function readFirstColumnCsv(filePath: string): Promise<string[]> {
 
 export async function readFirstColumnXlsx(filename: string): Promise<any[]> {
   const workbookReader = new Excel.stream.xlsx.WorkbookReader(filename, {});
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const firstColumn: any[] = [];
 
   for await (const worksheetReader of workbookReader) {
