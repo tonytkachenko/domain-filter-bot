@@ -1,6 +1,6 @@
 import { parse } from "csv-parse";
-import { createReadStream, readFileSync } from "node:fs";
-import * as xlsx from "node-xlsx";
+import * as Excel from "exceljs";
+import { createReadStream } from "node:fs";
 
 export async function readFirstColumnCsv(filePath: string): Promise<string[]> {
   return new Promise((resolve, reject) => {
@@ -19,24 +19,19 @@ export async function readFirstColumnCsv(filePath: string): Promise<string[]> {
       .on("error", (error) => reject(error));
   });
 }
-export function readFirstColumnXlsx(filePath: string): Promise<string[]> {
-  return new Promise((resolve, reject) => {
-    try {
-      // Чтение файла в буфер
-      const fileBuffer = readFileSync(filePath);
 
-      // Парсинг файла
-      const sheets = xlsx.parse(fileBuffer);
+export async function readFirstColumnXlsx(filename: string): Promise<any[]> {
+  const workbookReader = new Excel.stream.xlsx.WorkbookReader(filename, {});
+  const firstColumn: any[] = [];
 
-      // Предполагаем, что данные находятся на первом листе
-      const sheetData = sheets[0].data;
-
-      // Извлечение первого столбца
-      const firstColumnData = sheetData.map((row) => row[0]);
-
-      resolve(firstColumnData);
-    } catch (error) {
-      reject(error);
+  for await (const worksheetReader of workbookReader) {
+    for await (const row of worksheetReader) {
+      // Get the value of the first cell in the row
+      const firstCell = row.getCell(1);
+      firstColumn.push(firstCell.value);
     }
-  });
+    break; // Only process the first worksheet
+  }
+
+  return firstColumn;
 }
