@@ -5,6 +5,7 @@ import { parentPort, workerData } from "node:worker_threads";
 import { getClosestSnapshot } from "./lib/wayback.js";
 import { WorkerData, WorkerMessage } from "./types/index.js";
 import { checkDomainHtml } from "./utils/check-html.js";
+import { cleanDomain } from "./utils/index.js";
 import { logger } from "./utils/logger.js";
 import { readFirstColumnCsv, readFirstColumnXlsx } from "./utils/read-files.js";
 import { serializeArrayToCsv } from "./utils/write-files.js";
@@ -21,10 +22,12 @@ logger.info({
   fileType,
 });
 
-const data =
+const data = (
   fileType === ".csv"
     ? await readFirstColumnCsv(filePath)
-    : await readFirstColumnXlsx(filePath);
+    : await readFirstColumnXlsx(filePath)
+).map((x) => cleanDomain(x));
+
 const filterRegExForDomain = new RegExp(domainRegex, "i");
 const filterRegExForWayBack = new RegExp(contentRegex, "i");
 
