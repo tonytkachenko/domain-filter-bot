@@ -1,7 +1,14 @@
+export const enum WorkingMode {
+  ByContent,
+  ByDomain,
+  Full,
+  Sequential,
+}
+
 export interface WorkerData {
   filePath: string;
   fileType: string;
-  mode: string;
+  mode: WorkingMode;
   domainRegex: string;
   contentRegex: string;
   timeout: number;

@@ -1,5 +1,7 @@
 import { InlineKeyboard, Keyboard } from "grammy";
 
+import { chunk } from "../helpers/index.js";
+
 export const createTopicAddKeyboard = () => {
   return Keyboard.from([
     [
@@ -25,17 +27,35 @@ export const createFilterModeKeyboard = () => {
   return InlineKeyboard.from([
     [
       {
-        text: "Вариант А",
-        callback_data: "variant_a",
+        text: "А",
+        callback_data: `variant_2`,
       },
       {
-        text: "Вариант B",
-        callback_data: "variant_b",
+        text: "B",
+        callback_data: "variant_3",
       },
       {
-        text: "Вариант C",
-        callback_data: "variant_c",
+        text: "C",
+        callback_data: "variant_0",
+      },
+      {
+        text: "D",
+        callback_data: "variant_1",
       },
     ],
   ]);
+};
+
+export const createTopicsKeyboard = (
+  topics: { id: number; name: string }[],
+) => {
+  return InlineKeyboard.from(
+    chunk(
+      topics.map((topic) => ({
+        text: topic.name,
+        callback_data: `topic_${topic.id}`,
+      })),
+      2,
+    ),
+  );
 };

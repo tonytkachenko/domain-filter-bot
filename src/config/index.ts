@@ -10,6 +10,7 @@ const createConfigFromEnvironment = (environment: NodeJS.ProcessEnv) => {
       .default("info"),
     BOT_TOKEN: z.string(),
     BOT_ADMINS: z.array(z.number()).default([]),
+    RESULTS_DIR: z.string(),
     WAYBACK_TIMEOUT: z.number().default(6),
   });
 

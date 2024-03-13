@@ -13,15 +13,16 @@ const feature = composer.chatType("private").filter(isAdmin);
 
 feature.on(":document", logHandle("command-document"), async (ctx) => {
   try {
-    const file = await ctx.getFile();
-    const path = await file.download();
-    const type = ctx.message.document.file_name || "";
-    ctx.session.lastFilePath = path;
-    ctx.session.fileType = extname(type);
-
-    await ctx.reply("Файл получен", {
+    await ctx.reply("Файл получен, загружаю на сервер.", {
       reply_markup: createCancelKeyboard(),
     });
+
+    const file = await ctx.getFile();
+    const path = await file.download();
+    const type = ctx.message.document.file_name ?? "";
+
+    ctx.session.lastFilePath = path;
+    ctx.session.fileType = extname(type);
 
     await ctx.conversation.enter(CONVERSATIONS.RUN_CHECKER);
   } catch (error) {
