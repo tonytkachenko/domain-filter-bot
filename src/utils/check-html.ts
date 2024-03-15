@@ -16,6 +16,10 @@ export async function checkDomainHtml(
     if (html) {
       return regex.test(html);
     } else {
+      logger.warn({
+        url: url,
+        msg: "HTML is empty",
+      });
       return false;
     }
   } catch (error) {
