@@ -22,7 +22,9 @@ export const logger = pino({
             {
               target: "pino/file",
               level: config.LOG_LEVEL,
-              options: {},
+              options: {
+                ignore: "pid",
+              },
             },
           ]),
     ],

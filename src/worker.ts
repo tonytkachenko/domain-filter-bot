@@ -86,24 +86,27 @@ async function filterByContent(data: string[]): Promise<string[]> {
   const filtered: string[] = [];
 
   for (const domain of data) {
-    await sleep(timeout);
-
     const snapshot = await getClosestSnapshot(domain);
     if (snapshot) {
       const isValid = await checkDomainHtml(snapshot, filterRegExForWayBack);
       logger.debug({
         domain: domain,
         found: isValid,
-        step: "wayback",
+        snapshot,
       });
-      isValid && filtered.push(domain);
+
+      if (isValid) {
+        filtered.push(domain);
+      }
     } else {
       logger.debug({
         domain: domain,
-        msg: "Снимок не найден",
-        step: "wayback",
+        found: false,
+        msg: "Snapshot not found",
       });
     }
+
+    await sleep(timeout);
   }
 
   await serializeArrayToCsv(filtered, filePath);

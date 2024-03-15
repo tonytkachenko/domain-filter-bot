@@ -1,3 +1,5 @@
+import { logger } from "./logger.js";
+
 export async function checkDomainHtml(
   url: string,
   regex: RegExp,
@@ -17,6 +19,7 @@ export async function checkDomainHtml(
       return false;
     }
   } catch (error) {
+    logger.warn(error);
     return false;
   }
 }
